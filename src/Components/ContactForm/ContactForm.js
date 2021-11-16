@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import contactsOperations from '../../redux/contacts/operations';
+import { getContacts } from '../../redux/phonebook/phonebook-selectors';
+import { addContact } from '../../redux/phonebook/phonebook-operations';
 
 import style from './ContactForm.module.css';
 
 const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const { contacts } = useSelector(state => state);
+
+  const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
   const handleChange = e => {
@@ -31,18 +33,20 @@ const ContactForm = () => {
     setNumber('');
   };
 
-  const isContactExist = () => {
-    contacts.some(contact => contact.name.toLowerCase() === name.toLowerCase());
+  const isContactExist = newContact => {
+    contacts.some(
+      contact =>
+        contact.name.toLocaleLowerCase() === newContact.name.toLocaleLowerCase() ||
+        contacts.some(contact => contact.number === newContact.number),
+    )
+      ? alert(`Friend ${newContact.name} or number ${newContact.number} is alredy exist`)
+      : dispatch(addContact(newContact));
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (isContactExist(name)) {
-      alert(`${name} is already in contacts!`);
-    } else {
-      dispatch(contactsOperations.addContact({ name, number }));
-      reset();
-    }
+    isContactExist({ name, number });
+    reset();
   };
 
   return (

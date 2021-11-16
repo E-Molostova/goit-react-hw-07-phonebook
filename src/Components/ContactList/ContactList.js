@@ -1,24 +1,26 @@
 import { useSelector, useDispatch } from 'react-redux';
-import deleteContact from '../../redux/contacts/operations';
-import PropTypes from 'prop-types';
+import { deleteContact } from '../../redux/phonebook/phonebook-operations';
+import { getFilteredContacts } from '../../redux/phonebook/phonebook-selectors';
 import style from './ContactList.module.css';
 
 const ContactList = () => {
-  const { contacts, filter } = useSelector(state => state);
+  // const { contacts, filter } = useSelector(state => state);
+
+  const filteredContacts = useSelector(getFilteredContacts);
   const dispatch = useDispatch();
 
   const onDeleteBtn = id => dispatch(deleteContact(id));
 
-  const filteredContacts = (contacts, filter) => {
-    console.log(contacts);
-    return contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase()));
-  };
+  // const filteredContacts = (contacts, filter) => {
+  //   console.log(contacts);
+  //   return contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase()));
+  // };
 
-  const filterContacts = filteredContacts(contacts, filter);
+  // const filterContacts = filteredContacts(contacts, filter);
 
   return (
     <ul className={style.contactsList}>
-      {filterContacts.map(contact => (
+      {filteredContacts.map(contact => (
         <li className={style.contactsItem} key={contact.id}>
           <p>{contact.name + ': ' + contact.number}</p>
           <button
@@ -35,8 +37,4 @@ const ContactList = () => {
   );
 };
 
-ContactList.propTypes = {
-  contacts: PropTypes.array,
-  onDeleteBtn: PropTypes.func,
-};
 export default ContactList;

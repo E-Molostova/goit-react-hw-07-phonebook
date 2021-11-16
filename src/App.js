@@ -1,10 +1,15 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import ContactForm from './Components/ContactForm/ContactForm';
 import ContactList from './Components/ContactList/ContactList';
 import Filter from './Components/Filter/Filter';
+import { fetchContacts } from './redux/phonebook/phonebook-operations';
 
-const App = ({ contacts }) => {
+const App = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
   // useEffect(() => {
   //   localStorage.setItem('contacts', JSON.stringify(contacts));
   // }, [contacts]);
@@ -20,8 +25,4 @@ const App = ({ contacts }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  contacts: state.contacts,
-});
-
-export default connect(mapStateToProps)(App);
+export default App;
