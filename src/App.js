@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ContactForm from './Components/ContactForm/ContactForm';
 import ContactList from './Components/ContactList/ContactList';
 import Filter from './Components/Filter/Filter';
@@ -10,6 +10,9 @@ const App = () => {
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
+
+  const { loading } = useSelector(state => state.phonebook);
+  console.log(loading);
   // useEffect(() => {
   //   localStorage.setItem('contacts', JSON.stringify(contacts));
   // }, [contacts]);
@@ -17,6 +20,7 @@ const App = () => {
   return (
     <>
       <h1>Phonebook</h1>
+      {loading && <h1>Loading...</h1>}
       <ContactForm />
       <h2>Contacts </h2>
       <Filter />
